@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>USN Voyage Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --parchment: #f0e6c8;
+  --parchment-darker: #c8a96e;
+  --ink: #1a1008;
+  --ink-faded: #3a2a10;
+  --aged: #7a5c2e;
+  --gold: #b8922a;
+  --sea-blue: #1a3a4a;
+  --green-ok: #2a6b2a;
+  --red-wax: #8b1a1a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background-color: #0d1f2d;
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(26,58,74,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(10,30,50,0.8) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a3a4a' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  min-height: 100vh;
+  font-family: 'Crimson Text', serif;
+  color: var(--ink);
+  padding: 2rem 1rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.document {
+  width: 100%;
+  max-width: 820px;
+  background: var(--parchment);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E"),
+    linear-gradient(160deg, #f7edda 0%, #ede0c0 40%, #e4d5ae 70%, #dfc99a 100%);
+  border: 2px solid var(--parchment-darker);
+  box-shadow:
+    0 0 0 6px rgba(13,31,45,0.5),
+    0 0 0 7px var(--gold),
+    0 0 0 13px rgba(13,31,45,0.5),
+    0 20px 60px rgba(0,0,0,0.7),
+    inset 0 0 80px rgba(180,140,60,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.document::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 10%, rgba(255,230,150,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 90%, rgba(150,100,30,0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.document::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 60px; height: 60px;
+  background: linear-gradient(225deg, var(--parchment-darker) 30%, transparent 70%);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+.doc-inner {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 3.5rem;
+}
+.doc-header {
+  text-align: center;
+  border-bottom: 3px double var(--gold);
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.crown-emblem {
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+  filter: drop-shadow(0 2px 3px rgba(180,130,0,0.4));
+}
+.doc-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sea-blue);
+  line-height: 1.1;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+}
+.doc-header .header-date {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--aged);
+  margin-top: 0.4rem;
+  letter-spacing: 0.04em;
+}
+.voyage-title-display {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--sea-blue);
+  text-align: center;
+  margin: 0 0 1.5rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--parchment-darker);
+  border-bottom: 1px solid var(--parchment-darker);
+  line-height: 1.6;
+  min-height: 2.8rem;
+  transition: color 0.2s;
+}
+.voyage-title-display .missing { color: var(--parchment-darker); font-style: normal; }
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sea-blue);
+  margin: 1.8rem 0 1rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--parchment-darker);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.section-title .badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  background: var(--sea-blue);
+  color: var(--parchment);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-left: 0.2rem;
+  flex-shrink: 0;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--parchment-darker);
+}
+.field-row { display: grid; gap: 1rem; margin-bottom: 0.9rem; }
+.field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.field-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.field { display: flex; flex-direction: column; gap: 0.3rem; position: relative; }
+.field label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--aged);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.field label .field-check {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--green-ok);
+  color: white;
+  font-size: 8px;
+  line-height: 12px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.25s;
+  flex-shrink: 0;
+}
+.field.is-filled label .field-check { opacity: 1; }
+.field input,
+.field select,
+.field textarea {
+  background: rgba(255,255,255,0.35);
+  border: none;
+  border-bottom: 1.5px solid var(--parchment-darker);
+  padding: 0.35rem 0.5rem;
+  font-family: 'Crimson Text', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-bottom-color: var(--gold);
+  background: rgba(255,255,255,0.55);
+}
+.field.is-filled input,
+.field.is-filled select {
+  border-bottom-color: rgba(42,107,42,0.4);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 72px;
+  border: 1.5px solid var(--parchment-darker);
+  border-radius: 2px;
+}
+.field.is-filled textarea { border-color: rgba(42,107,42,0.4); }
+.word-count {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--parchment-darker);
+  text-align: right;
+  margin-top: 0.15rem;
+  transition: color 0.2s;
+}
+.word-count.has-content { color: var(--aged); }
+.voyage-types { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.voyage-types label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Crimson Text', serif;
+  font-size: 1rem;
+  color: var(--ink-faded);
+  cursor: pointer;
+}
+.voyage-types input[type="radio"] { accent-color: var(--sea-blue); width: 14px; height: 14px; cursor: pointer; }
+.gold-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: end;
+}
+.gold-diff {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--sea-blue);
+  padding: 0.35rem 0.5rem;
+  background: rgba(26,58,74,0.07);
+  border: 1px solid var(--parchment-darker);
+  text-align: center;
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+}
+.gold-diff.positive { color: var(--green-ok); background: rgba(42,107,42,0.07); }
+.gold-diff.negative { color: var(--red-wax); background: rgba(139,26,26,0.07); }
+.Confiscations-summary {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--aged);
+  margin-top: 0.6rem;
+  text-align: right;
+  min-height: 1.2rem;
+  transition: color 0.2s;
+}
+.Confiscations-summary.positive { color: var(--green-ok); }
+.Confiscations-summary.negative { color: var(--red-wax); }
+.crew-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.9rem; }
+.crew-table thead tr { background: rgba(26,58,74,0.08); }
+.crew-table th {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sea-blue);
+  padding: 0.5rem 0.5rem;
+  text-align: center;
+  border-bottom: 1.5px solid var(--parchment-darker);
+}
+.crew-table th.th-name { text-align: left; }
+.crew-table td {
+  padding: 0.3rem 0.4rem;
+  border-bottom: 1px solid rgba(180,140,60,0.25);
+  vertical-align: middle;
+  text-align: center;
+}
+.crew-table td.td-name { text-align: left; }
+.crew-table td input[type="text"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--parchment-darker);
+  width: 100%;
+  font-family: 'Crimson Text', serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  padding: 0.2rem 0.3rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.crew-table td input[type="text"]:focus { border-bottom-color: var(--gold); }
+.crew-table td input[type="text"].has-name { border-bottom-color: rgba(42,107,42,0.4); }
+.crew-table tr.crew-row:nth-child(even) td { background: rgba(255,255,255,0.2); }
+.crew-table tr.crew-row.no-name td.td-name input { border-bottom-color: rgba(180,140,60,0.5); background: rgba(255,200,100,0.08); }
+.role-cb {
+  appearance: none; -webkit-appearance: none;
+  width: 15px; height: 15px;
+  border: 1.5px solid var(--parchment-darker);
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.15s, background 0.15s;
+  display: inline-block;
+  vertical-align: middle;
+}
+.role-cb:checked { background: var(--sea-blue); border-color: var(--sea-blue); }
+.role-cb:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px; left: 1px;
+  font-size: 11px;
+  color: var(--parchment);
+  line-height: 1;
+}
+.role-cb:hover { border-color: var(--gold); }
+.btn-remove {
+  background: none; border: none; color: var(--red-wax); cursor: pointer;
+  font-size: 1.1rem; line-height: 1; padding: 0 0.3rem; opacity: 0.5; transition: opacity 0.15s;
+}
+.btn-remove:hover { opacity: 1; }
+.btn-row {
+  display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 2rem;
+  padding-top: 1.5rem; border-top: 1px solid var(--parchment-darker); justify-content: center;
+}
+.btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.4rem;
+  border: 2px solid var(--sea-blue);
+  background: transparent;
+  color: var(--sea-blue);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s, opacity 0.2s;
+}
+.btn:hover:not(:disabled) {
+  background: var(--sea-blue); color: var(--parchment);
+  box-shadow: 3px 3px 0 var(--parchment-darker); transform: translate(-1px,-1px);
+}
+.btn:active:not(:disabled) { transform: translate(0,0); box-shadow: none; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary { background: var(--sea-blue); color: var(--parchment); border-color: var(--sea-blue); }
+.btn-primary:hover:not(:disabled) { background: #12293a; }
+.btn-gold { border-color: var(--gold); color: var(--gold); }
+.btn-gold:hover:not(:disabled) { background: var(--gold); color: var(--parchment); }
+.btn-danger { border-color: var(--red-wax); color: var(--red-wax); }
+.btn-danger:hover:not(:disabled) { background: var(--red-wax); color: var(--parchment); }
+.btn-sm { font-size: 0.6rem; padding: 0.45rem 0.9rem; }
+.report-box {
+  margin-top: 1.5rem;
+  background: rgba(26,58,74,0.06);
+  border: 1.5px solid var(--parchment-darker);
+  padding: 1.2rem 1.4rem;
+  font-family: 'Crimson Text', serif;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  color: var(--ink-faded);
+}
+.ornament { text-align: center; color: var(--gold); font-size: 1.1rem; letter-spacing: 0.5em; margin: 0.5rem 0; opacity: 0.6; }
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65); z-index: 100;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.visible { display: flex; }
+.modal {
+  background: var(--parchment);
+  background-image: linear-gradient(160deg, #f7edda 0%, #e4d5ae 100%);
+  border: 2px solid var(--gold);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(180,140,60,0.08);
+  padding: 2rem 2.5rem; max-width: 380px; width: 90%; text-align: center;
+}
+.modal p {
+  font-family: 'IM Fell English', serif; font-style: italic;
+  font-size: 1.1rem; color: var(--ink-faded); margin-bottom: 1.5rem; line-height: 1.5;
+}
+.modal-buttons { display: flex; gap: 1rem; justify-content: center; }
+@media (max-width: 620px) {
+  .doc-inner { padding: 1.5rem 1.2rem; }
+  .field-row.cols-2, .field-row.cols-3, .field-row.cols-4, .gold-grid { grid-template-columns: 1fr; }
+  .doc-header h1 { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="document">
+  <div class="doc-inner">
+
+    <div class="doc-header">
+      <div class="crown-emblem">⚓</div>
+      <h1>United States Navy</h1>
+      <div class="header-date" id="headerDate"></div>
+    </div>
+
+    <div id="voyageTitle" class="voyage-title-display"></div>
+
+    <div class="field-row cols-2">
+      <div class="field" id="f-captain">
+        <label>Captain's Name <span class="field-check">✓</span></label>
+        <input type="text" id="captain" placeholder="Enter captain's name" oninput="onAnyChange()" />
+      </div>
+      <div class="field" id="f-voyageNum">
+        <label>Voyage Number <span class="field-check">✓</span></label>
+        <input type="text" id="voyageNum" placeholder="e.g. 3" oninput="onAnyChange()" />
+      </div>
+    </div>
+
+    <div class="field-row cols-2">
+      <div class="field" id="f-ship">
+        <label>Ship <span class="field-check">✓</span></label>
+        <select id="ship" onchange="onAnyChange()">
+          <option value="">— Select vessel —</option>
+          <option>USS Phantom</option>
+          <option>USS Horus</option>
+          <option>USS Pondie</option>
+        </select>
+      </div>
+      <div class="field" id="f-mainShip">
+        <label>Main Ship <span class="field-check">✓</span></label>
+        <select id="mainShip" onchange="onAnyChange()">
+          <option value="">— Select main vessel —</option>
+          <option>USS Phantom</option>
+          <option>USS Horus</option>
+          <option>USS Pondie</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Voyage Type</label>
+        <div class="voyage-types">
+          <label><input type="radio" name="voyageType" value="Patrol" checked onchange="onAnyChange()" /> Patrol</label>
+          <label><input type="radio" name="voyageType" value="Hourglass" onchange="onAnyChange()" /> Hourglass</label>
+          <label><input type="radio" name="voyageType" value="Tell Tales" onchange="onAnyChange()" /> Tell Tales</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" id="f-notes">
+        <label>Log <span class="field-check">✓</span></label>
+        <textarea id="notes" placeholder="Record the voyage narrative..." oninput="onAnyChange()"></textarea>
+        <div class="word-count" id="wc-notes">0 words</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" id="f-events">
+        <label>Events <span class="field-check">✓</span></label>
+        <textarea id="events" placeholder="Notable engagements, discoveries, incidents..." oninput="onAnyChange()"></textarea>
+        <div class="word-count" id="wc-events">0 words</div>
+      </div>
+    </div>
+
+    <div class="section-title">Confiscations</div>
+
+    <div class="gold-grid">
+      <div class="field">
+        <label>Initial Gold</label>
+        <input type="number" id="goldStart" placeholder="0" min="0" oninput="onAnyChange()" />
+      </div>
+      <div class="field">
+        <label>Ending Gold</label>
+        <input type="number" id="goldEnd" placeholder="0" min="0" oninput="onAnyChange()" />
+      </div>
+      <div class="field">
+        <label>Δ Gold</label>
+        <div class="gold-diff" id="goldDiff">—</div>
+      </div>
+      <div class="field" style="visibility:hidden;"></div>
+
+      <div class="field">
+        <label>Initial Doubloons</label>
+        <input type="number" id="dblStart" placeholder="0" min="0" oninput="onAnyChange()" />
+      </div>
+      <div class="field">
+        <label>Ending Doubloons</label>
+        <input type="number" id="dblEnd" placeholder="0" min="0" oninput="onAnyChange()" />
+      </div>
+      <div class="field">
+        <label>Δ Doubloons</label>
+        <div class="gold-diff" id="dblDiff">—</div>
+      </div>
+      <div class="field" style="visibility:hidden;"></div>
+    </div>
+    <div class="Confiscations-summary" id="ConfiscationsSummary"></div>
+
+    <div class="section-title">Crew <span class="badge" id="crewBadge">0</span></div>
+
+    <table class="crew-table" id="crewTable">
+      <thead>
+        <tr>
+          <th class="th-name">Sailor Name</th>
+          <th>Helm</th>
+          <th>Canoneer</th>
+          <th>Flex</th>
+          <th>Carpenter</th>
+          <th>LWP</th>
+          <th>REP</th>
+          <th>Field Surgeon</th>
+          <th style="width:30px"></th>
+        </tr>
+      </thead>
+      <tbody id="crewBody"></tbody>
+    </table>
+
+    <div style="margin-top:0.8rem;">
+      <button class="btn btn-sm" onclick="addCrew()">+ Add Crewman</button>
+    </div>
+
+    <div class="motto-block" id="squadMottoBlock" style="display:none; margin-top:1.2rem; text-align:center; padding:0.6rem 1rem; border-top:1px solid var(--parchment-darker); border-bottom:1px solid var(--parchment-darker);">
+      <div style="font-family:'Cinzel',serif; font-size:0.6rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--aged); margin-bottom:0.3rem;">Squad Motto</div>
+      <div id="squadMottoText" style="font-family:'IM Fell English',serif; font-style:italic; font-size:1rem; color:var(--sea-blue); line-height:1.5;"></div>
+    </div>
+
+    <div class="motto-block" id="shipMottoBlock" style="display:none; margin-top:0.8rem; text-align:center; padding:0.6rem 1rem; border-top:1px solid var(--parchment-darker); border-bottom:1px solid var(--parchment-darker);">
+      <div style="font-family:'Cinzel',serif; font-size:0.6rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--aged); margin-bottom:0.3rem;">Ship Motto</div>
+      <div id="shipMottoText" style="font-family:'IM Fell English',serif; font-style:italic; font-size:1rem; color:var(--sea-blue); line-height:1.5;"></div>
+    </div>
+
+    <div class="field-row" style="margin-top:1.2rem;">
+      <div class="field" id="f-vplink">
+        <label>VP Link <span class="field-check">✓</span></label>
+        <input type="url" id="vplink" placeholder="https://..." oninput="onAnyChange()" />
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" onclick="copyReport()" id="copyBtn">Copy Report</button>
+      <button class="btn btn-danger" onclick="showClearModal()">Clear Data</button>
+    </div>
+
+    <div class="ornament">✦ ✦ ✦</div>
+    <div class="report-box" id="reportBox"></div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="clearModal">
+  <div class="modal">
+    <p>Are you sure you wish to reset the log?<br/>All recorded data will be lost.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-danger" onclick="clearAll()">Confirm</button>
+      <button class="btn" onclick="hideClearModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROLES = ['Helm','Canoneer','Flex','Carpenter','LWP','REP','Field Surgeon'];
+let crewCount = 0;
+
+const SQUAD_MOTTOS = {
+  'USS Phantom': ':Phantomsquad: We Will Haunt You We Will Taunt You :Phantomsquad:',
+  'USS Horus':   ':Snabel_squad: Certified Bamboo Enjoyers :Snabel_squad:',
+  'USS Pondie':  ':Pondiesquad: Riding the Waves :Pondiesquad:'
+};
+
+const SHIP_MOTTOS = {
+  'USS Phantom': ':Phantom: We Will Haunt You We Will Taunt You :Phantom:',
+  'USS Horus':   ':Horus: Eye of the Storm :Horus:',
+  'USS Pondie':  ':Pondie: Deep Waters Run True :Pondie:'
+};
+
+function setHeaderDate() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  document.getElementById('headerDate').textContent = dateStr;
+}
+setHeaderDate();
+
+function toOrdinal(n) {
+  const num = parseInt(n);
+  if (isNaN(num)) return n;
+  const s = ['th','st','nd','rd'];
+  const v = num % 100;
+  return num + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function getVoyageType() {
+  const radios = document.querySelectorAll('input[name="voyageType"]');
+  for (const r of radios) if (r.checked) return r.value;
+  return 'Patrol';
+}
+
+function updateFieldStates() {
+  const fields = {
+    'f-captain': document.getElementById('captain').value.trim(),
+    'f-voyageNum': document.getElementById('voyageNum').value.trim(),
+    'f-ship': document.getElementById('ship').value,
+    'f-mainShip': document.getElementById('mainShip').value,
+    'f-notes': document.getElementById('notes').value.trim(),
+    'f-events': document.getElementById('events').value.trim(),
+    'f-vplink': document.getElementById('vplink').value.trim(),
+  };
+  for (const [id, val] of Object.entries(fields)) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('is-filled', !!val);
+  }
+  document.querySelectorAll('#crewBody .crew-row').forEach(row => {
+    const inp = row.querySelector('input[type="text"]');
+    if (!inp) return;
+    const filled = !!inp.value.trim();
+    inp.classList.toggle('has-name', filled);
+    row.classList.toggle('no-name', !filled);
+  });
+}
+
+function updateMottos() {
+  const ship     = document.getElementById('ship').value;
+  const mainShip = document.getElementById('mainShip').value;
+
+  const squadBlock = document.getElementById('squadMottoBlock');
+  const squadText  = document.getElementById('squadMottoText');
+  if (ship && SQUAD_MOTTOS[ship]) {
+    squadText.textContent = SQUAD_MOTTOS[ship];
+    squadBlock.style.display = '';
+  } else {
+    squadBlock.style.display = 'none';
+  }
+
+  const shipBlock = document.getElementById('shipMottoBlock');
+  const shipText  = document.getElementById('shipMottoText');
+  if (mainShip && SHIP_MOTTOS[mainShip]) {
+    shipText.textContent = SHIP_MOTTOS[mainShip];
+    shipBlock.style.display = '';
+  } else {
+    shipBlock.style.display = 'none';
+  }
+}
+
+function wordCount(str) {
+  return str.trim() === '' ? 0 : str.trim().split(/\s+/).length;
+}
+function updateWordCounts() {
+  const notesVal = document.getElementById('notes').value;
+  const eventsVal = document.getElementById('events').value;
+  const wcN = document.getElementById('wc-notes');
+  const wcE = document.getElementById('wc-events');
+  const nw = wordCount(notesVal);
+  const ew = wordCount(eventsVal);
+  wcN.textContent = nw + ' word' + (nw !== 1 ? 's' : '');
+  wcN.classList.toggle('has-content', nw > 0);
+  wcE.textContent = ew + ' word' + (ew !== 1 ? 's' : '');
+  wcE.classList.toggle('has-content', ew > 0);
+}
+
+function updateConfiscations() {
+  const gs = parseFloat(document.getElementById('goldStart').value) || 0;
+  const ge = parseFloat(document.getElementById('goldEnd').value) || 0;
+  const ds = parseFloat(document.getElementById('dblStart').value) || 0;
+  const de = parseFloat(document.getElementById('dblEnd').value) || 0;
+  const goldDiff = ge - gs;
+  const dblDiff  = de - ds;
+  const gd = document.getElementById('goldDiff');
+  const dd = document.getElementById('dblDiff');
+  if (gs === 0 && ge === 0) { gd.textContent = '—'; gd.className = 'gold-diff'; }
+  else {
+    gd.textContent = (goldDiff >= 0 ? '+' : '') + goldDiff.toLocaleString();
+    gd.className = 'gold-diff ' + (goldDiff > 0 ? 'positive' : goldDiff < 0 ? 'negative' : '');
+  }
+  if (ds === 0 && de === 0) { dd.textContent = '—'; dd.className = 'gold-diff'; }
+  else {
+    dd.textContent = (dblDiff >= 0 ? '+' : '') + dblDiff.toLocaleString();
+    dd.className = 'gold-diff ' + (dblDiff > 0 ? 'positive' : dblDiff < 0 ? 'negative' : '');
+  }
+  const summary = document.getElementById('ConfiscationsSummary');
+  if (gs === 0 && ge === 0 && ds === 0 && de === 0) {
+    summary.textContent = '';
+    summary.className = 'Confiscations-summary';
+  } else {
+    const parts = [];
+    if (goldDiff !== 0) parts.push((goldDiff > 0 ? '+' : '') + goldDiff.toLocaleString() + ' gold');
+    if (dblDiff  !== 0) parts.push((dblDiff  > 0 ? '+' : '') + dblDiff.toLocaleString()  + ' doubloons');
+    if (parts.length === 0) {
+      summary.textContent = 'No change in confiscations.';
+      summary.className = 'Confiscations-summary';
+    } else {
+      const net = goldDiff + dblDiff;
+      summary.textContent = 'Net voyage gain: ' + parts.join(' · ');
+      summary.className = 'Confiscations-summary ' + (net > 0 ? 'positive' : net < 0 ? 'negative' : '');
+    }
+  }
+}
+
+function updateVoyageTitle() {
+  const captain    = document.getElementById('captain').value.trim();
+  const voyageNum  = document.getElementById('voyageNum').value.trim();
+  const ship       = document.getElementById('ship').value;
+  const mainShip   = document.getElementById('mainShip').value;
+  const voyageType = getVoyageType();
+  const el = document.getElementById('voyageTitle');
+  const span = (val, fallback) => {
+    if (val) return document.createTextNode(val);
+    const s = document.createElement('span');
+    s.className = 'missing';
+    s.textContent = fallback;
+    return s;
+  };
+  el.innerHTML = '';
+  el.appendChild(span(captain, '[Captain]'));
+  el.appendChild(document.createTextNode("'s " + voyageType + ' Log of the '));
+  const ordNum = voyageNum ? toOrdinal(voyageNum) : null;
+  el.appendChild(span(ordNum, '[Voyage No.]'));
+  el.appendChild(document.createTextNode(' Voyage of the '));
+  el.appendChild(span(ship, '[Ship]'));
+  el.appendChild(document.createTextNode(', Auxiliary to the '));
+  el.appendChild(span(mainShip, '[Main Ship]'));
+  el.appendChild(document.createTextNode('.'));
+}
+
+function addCrew() {
+  crewCount++;
+  const tbody = document.getElementById('crewBody');
+  const tr = document.createElement('tr');
+  tr.className = 'crew-row no-name';
+  tr.id = 'crew-' + crewCount;
+  const id = crewCount;
+  const cbCells = ROLES.map((role, i) =>
+    `<td><input type="checkbox" class="role-cb" id="cb-${id}-${i}" title="${role}" onchange="onAnyChange()" /></td>`
+  ).join('');
+  tr.innerHTML = `
+    <td class="td-name"><input type="text" placeholder="Sailor name…" oninput="onCrewNameInput(this); onAnyChange();" /></td>
+    ${cbCells}
+    <td><button class="btn-remove" onclick="removeCrew(${id})" title="Remove">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  updateCrewBadge();
+}
+
+function removeCrew(id) {
+  const el = document.getElementById('crew-' + id);
+  if (el) { el.remove(); updateCrewBadge(); onAnyChange(); }
+}
+
+function onCrewNameInput(inp) {
+  const row = inp.closest('.crew-row');
+  const filled = !!inp.value.trim();
+  inp.classList.toggle('has-name', filled);
+  row.classList.toggle('no-name', !filled);
+}
+
+function updateCrewBadge() {
+  const count = document.querySelectorAll('#crewBody .crew-row').length;
+  document.getElementById('crewBadge').textContent = count;
+}
+
+function getCrewData() {
+  const rows = document.querySelectorAll('#crewBody .crew-row');
+  const data = [];
+  rows.forEach(row => {
+    const nameInput = row.querySelector('input[type="text"]');
+    const name = nameInput ? nameInput.value.trim() : '';
+    const roles = [];
+    ROLES.forEach(role => {
+      const cb = row.querySelector(`[title="${role}"]`);
+      if (cb && cb.checked) roles.push(role);
+    });
+    if (name || roles.length) data.push({ name: name || '—', roles: roles.length ? roles.join(', ') : '—' });
+  });
+  return data;
+}
+
+function buildReport() {
+  const captain    = document.getElementById('captain').value.trim()    || '[Captain]';
+  const voyageNum  = document.getElementById('voyageNum').value.trim()  || '[Voyage No.]';
+  const ship       = document.getElementById('ship').value               || '[Ship]';
+  const mainShip   = document.getElementById('mainShip').value           || '[Main Ship]';
+  const notes      = document.getElementById('notes').value.trim()      || 'No log entries recorded.';
+  const vplink     = document.getElementById('vplink').value.trim()     || '';
+  const events     = document.getElementById('events').value.trim()     || 'No events recorded.';
+  const voyageType = getVoyageType();
+  const goldGathered = (parseFloat(document.getElementById('goldEnd').value)   || 0)
+                     - (parseFloat(document.getElementById('goldStart').value) || 0);
+  const dblGathered  = (parseFloat(document.getElementById('dblEnd').value)    || 0)
+                     - (parseFloat(document.getElementById('dblStart').value)  || 0);
+  const crew = getCrewData();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  const logTitle = `${captain}'s ${voyageType} Log of the ${toOrdinal(voyageNum)} Voyage of the ${ship}, Auxiliary to the ${mainShip}.`;
+  let crewLines = crew.length === 0
+    ? '  No crew recorded.'
+    : crew.map(c => `  • ${c.name} — ${c.roles}`).join('\n');
+
+  const squadMotto = SQUAD_MOTTOS[ship]     || '';
+  const shipMotto  = SHIP_MOTTOS[mainShip]  || '';
+  const mottoLines = [
+    squadMotto ? `  ${squadMotto}` : '',
+    shipMotto  ? `  ${shipMotto}`  : ''
+  ].filter(Boolean).join('\n');
+
+  const vpLine = vplink ? `\nVP Link: ${vplink}` : '';
+
+  return `${logTitle}
+
+LOG
+${notes}${vpLine}
+
+EVENTS
+${events}
+
+CONFISCATIONS
+  Gold         : ${goldGathered.toLocaleString()}
+  Doubloons    : ${dblGathered.toLocaleString()}
+
+CREW MANIFEST
+${crewLines}
+${mottoLines ? '\n' + mottoLines : ''}`;
+}
+
+function refreshReport() {
+  document.getElementById('reportBox').textContent = buildReport();
+}
+
+function onAnyChange() {
+  updateVoyageTitle();
+  updateFieldStates();
+  updateWordCounts();
+  updateConfiscations();
+  updateCrewBadge();
+  updateMottos();
+  refreshReport();
+}
+
+function copyReport() {
+  navigator.clipboard.writeText(buildReport()).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  }).catch(() => alert('Could not copy — please select the text manually.'));
+}
+
+function showClearModal() { document.getElementById('clearModal').classList.add('visible'); }
+function hideClearModal()  { document.getElementById('clearModal').classList.remove('visible'); }
+
+function clearAll() {
+  ['captain','voyageNum','notes','events','goldStart','goldEnd','dblStart','dblEnd','vplink']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ship').value = '';
+  document.getElementById('mainShip').value = '';
+  document.querySelectorAll('input[name="voyageType"]')[0].checked = true;
+  document.getElementById('crewBody').innerHTML = '';
+  crewCount = 0;
+  addCrew();
+  onAnyChange();
+  hideClearModal();
+}
+
+document.getElementById('clearModal').addEventListener('click', function(e) {
+  if (e.target === this) hideClearModal();
+});
+
+addCrew();
+onAnyChange();
+</script>
+</body>
+</html>
