@@ -1002,7 +1002,7 @@ function buildReport() {
   const matches = getMatchData();
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
-  const logTitle = `${captain}'s ${voyageType} Log of the ${toOrdinal(voyageNum)} Voyage of the ${ship}, Auxiliary to the ${mainShip}.`;
+  const logTitle = `${captain}'s Skirmish Log of the ${toOrdinal(voyageNum)} Voyage of the ${ship}, Auxiliary to the ${mainShip}.`;
   let crewLines = crew.length === 0
     ? '  No crew recorded.'
     : crew.map(c => `  • ${c.name} — ${c.roles}`).join('\n');
