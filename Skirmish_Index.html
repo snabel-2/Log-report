@@ -726,7 +726,7 @@ function toOrdinal(n) {
 function getVoyageType() {
   const radios = document.querySelectorAll('input[name="voyageType"]');
   for (const r of radios) if (r.checked) return r.value;
-  return 'Patrol';
+  return 'Skirmish';
 }
 
 function updateFieldStates() {
